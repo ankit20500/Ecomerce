@@ -1,0 +1,135 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.banner{
+    background-image: linear-gradient(to right, #635dc0, #3027ae );
+    height: 100vmin;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: white;
+}
+.banner h1{
+    margin: 5vmax;
+    font-weight: 600;
+    font-size: 1.5vmax;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.banner p{
+    font-weight: 300;
+    font-size: 1.5vmax;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.banner a button{
+    margin-bottom: 5vmax;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid white;
+    padding: 1vmax;
+    transition: all 0.3s;
+    width: 9vmax;
+    font-size: 1.4vmax;
+    font-weight: 500;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.banner a button:hover{
+    background-color: #635dc0;
+    color: white;
+}
+.banner::after{
+    content: "";
+    width: 100vw;
+    height: 100vmin;
+    background-color: white;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    clip-path: polygon(100% 60%, 0% 100%, 100% 100%);
+    max-width: 100%;
+}
+.homeHeading{
+    text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.4vmax;
+    border-bottom: 2px solid rgba(21, 21, 21,0.6);
+    width: 20%;
+    padding: 1vmax;
+    margin: 5vmax auto;
+    color: rgba(0,0,0,0.8);
+}
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2vmax auto;
+    width: 80vw;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* style for product.jsx */
+
+.productCart{
+    width: 15vmax;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: rgb(48,48,48);
+    margin: 2vmax;
+    transition: all 0.5s;
+    padding-bottom: 0.5vmax;
+    box-shadow: 0 0 15px rgba(15,15,15,0.26);
+}
+.productCart img{
+    height: 15vmax;
+}
+.productCart div{
+    display: flex;
+    justify-content: flex-start;
+}
+.productCart div span{
+    font-weight: 300;
+    font-size: 0.8vmax;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+}
+.productCart p{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.2vmax;
+    margin: 1vmax 0.5vmax;
+    margin-bottom: 0;
+}
+.productCart > span{
+    margin: 0.5vmax 0.5vmax;
+    color: tomato;
+    font-size: 1vmax;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.productCart:hover{
+    box-shadow: 0 0 15px rgba(15,15,15,0.26);
+    transition: all 0.2s;
+    transform: translateY(-0.5vmax);
+}
+@media screen and(max-width:600px){
+    .productCart p{
+        font-size: 1.7vmax;
+    }
+    .productCart >div{
+        margin: 0;
+        display: block;
+    }
+    .productCart > span{
+        font-size: 1.5vmax;
+    }
+    .productCart div span{
+        margin: 0 0 0.5vmax;
+        font-size: 1vmax;
+        font-weight: 300;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+}
+

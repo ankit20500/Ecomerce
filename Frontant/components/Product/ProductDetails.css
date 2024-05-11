@@ -1,0 +1,16 @@
+.productDetails{
+    width: 100vw;
+    max-width: 100%;
+    padding: 6vmax;
+    box-sizing: border-box;
+    display: flex;
+}
+.product-img img{
+    
+    height: 60vh;
+}
+
+  .carousel .thumbs-wrapper {
+   display: none;
+  }
+  
