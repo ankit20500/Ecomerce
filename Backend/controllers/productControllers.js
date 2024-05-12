@@ -4,13 +4,34 @@ const asyncErrorHandler=require("../utils/AsyncErrorHandler");
 const ApiFeatures=require("../utils/Features");
 const { connection } = require("mongoose");
 
-// Create product-- admin
+
+// const createProduct = asyncErrorHandler(async (req, res) => {
+//     // req.body.user=req.user.id;
+//     const product = await schema.create(req.body);
+//     res.status(200).json({
+//         success:true,
+//         product
+//     });
+// });
 const createProduct = asyncErrorHandler(async (req, res) => {
-    req.body.user=req.user.id;
-    const product = await schema.create(req.body);
+    const products = req.body; // Assuming req.body is an array of products
+console.log("request arrived ")
+    // Array to store the saved products
+    const savedProducts = [];
+
+    // Iterate over each product in the array
+    for (const productData of products) {
+        // Create a new product using the schema
+        const product = await schema.create(productData);
+        
+        // Push the saved product to the array
+        savedProducts.push(product);
+    }
+
+    // Respond with the saved products
     res.status(200).json({
-        success:true,
-        product
+        success: true,
+        products: savedProducts
     });
 });
 

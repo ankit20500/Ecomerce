@@ -15,7 +15,8 @@ export default function product({product}){
     }
     return (
         <Link className='productCart' to={`/product/${product._id}`}>
-            <img src={product.image[0].url} alt={product.name} />
+           
+            <img src={`https://source.unsplash.com/random`} alt={product.name} />
             <p>{product.name}</p>
             <div>
                 <ReactStars {...options}/> <span>{`(${product.noOfReviews} Reviews)`}</span>
