@@ -15,7 +15,9 @@ process.on("uncaughtException", err=>{
         process.exit(1);
 })
 
+
 app.listen(PORT, ()=>{
+   
     console.log(`server is starting on http://localhost:${PORT}`);
 })
 

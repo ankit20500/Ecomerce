@@ -6,8 +6,8 @@ const router=express.Router();
 
 
 router.get("/products", getallProduct); 
-
-router.post("/admin/products/new",isAuthencationUser,authorizeRole("admin"), createProduct);
+// isAuthencationUser,authorizeRole("admin"),
+router.post("/admin/products/new", createProduct);
 
 router.put("/admin/products/:id",isAuthencationUser,authorizeRole("admin"), updateProduct);
 

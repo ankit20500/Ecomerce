@@ -3,7 +3,7 @@ import './App.css';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import Home from '../components/Home/Home'
-import Loading from '../components/layouts/Loading/Loading';
+
 import ProductDetails from '../components/Product/ProductDetail.jsx';
 
 function App() {

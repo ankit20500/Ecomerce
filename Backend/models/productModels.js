@@ -30,7 +30,7 @@ const productModel=new mongoose.Schema(
     ],
     catogery:{
         type:String,
-        required:[true,"enter product category"],
+        // required:[true,"enter product category"],
     },
     stock:{
         type:Number,
@@ -68,11 +68,11 @@ const productModel=new mongoose.Schema(
         }],
         default: []
     },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
-    },
+    // user:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref:"User",
+    //     required:true
+    // },
     createrAt:{
         type:Date,
         default: Date.now,

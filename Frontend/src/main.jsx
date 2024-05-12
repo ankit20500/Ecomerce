@@ -2,10 +2,10 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
+import LevelContextProvider from '../Context/ContextProduct';
 
 
 const options = {
@@ -15,10 +15,13 @@ const options = {
   transition: transitions.SCALE
 }
 createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <AlertProvider template={AlertTemplate} {...options}>
-      <App />
-    </AlertProvider>
-  </Provider>
+  <LevelContextProvider>
+   
+      <AlertProvider template={AlertTemplate} {...options}>
+        <App />
+      </AlertProvider>
+  
+  </LevelContextProvider>,
 );
+
 // createRoot(document.getElementById('root')).render(<App />);
