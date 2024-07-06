@@ -23,8 +23,14 @@ const UserModel=new mongoose.Schema(
         password:{
             type:String,
             required:[true,"please enter password"],
-            minLength:[6,"password is less than 6 character"],
+            minLength:[5,"password is less than 6 character"],
             select:false,
+        },
+        number:{
+            type:Number,
+            minLength:[10,"phone number should be 10 digits long"],
+            maxLength: [10, "phone number should be 10 digits long"],
+            default:"0000000000"
         },
         avatar:
             {

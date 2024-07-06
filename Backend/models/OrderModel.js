@@ -3,6 +3,10 @@ const User=require("../models/UserModel");
 
 const orderSchema=new mongoose.Schema({
    shippingInfo:{
+    name:{
+        type:String,
+        required:true
+    },
     address:{
         type:String,
         required:true
@@ -13,6 +17,10 @@ const orderSchema=new mongoose.Schema({
     },
     state: {
         type:String, 
+        required:true
+    },
+    country:{
+        type:String,
         required:true
     },
     pincode:{

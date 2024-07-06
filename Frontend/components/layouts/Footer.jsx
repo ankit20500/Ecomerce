@@ -6,7 +6,7 @@ import './Footer.css'
 
 export default function Footer(){
     return (
-        <footer className="footer">
+        <footer className='footer'>
             <div className="leftfooter">
                 <h4>DOWNLOAD OUR APP</h4>
                 <p>Download App For Android and IOS mobile phone </p>
@@ -15,7 +15,7 @@ export default function Footer(){
                 <img src="https://th.bing.com/th/id/OIP.W_ePhzXFCC352Bo8vLXPtwHaCL?rs=1&pid=ImgDetMain" alt="" />
             </div>
             <div className="midfooter">
-                <h1>ECOMMERCE</h1>
+                <h1 >ECOMMERCE</h1>
                 <p>Hight Quality is our first priority</p>
                 <p>Copyrights 2021 &copy; MrAnkit</p>
             </div>

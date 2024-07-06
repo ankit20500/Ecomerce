@@ -28,9 +28,9 @@ const productModel=new mongoose.Schema(
             },
         },
     ],
-    catogery:{
+    category:{
         type:String,
-        // required:[true,"enter product category"],
+        required:[true,"enter product category"],
     },
     stock:{
         type:Number,

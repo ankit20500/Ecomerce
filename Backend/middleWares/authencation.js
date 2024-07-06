@@ -3,12 +3,10 @@ const jwt=require("jsonwebtoken");
 const User=require("../models/UserModel");
 const asyncErrorHandler=require("../utils/AsyncErrorHandler");
 const ErrorHandler = require("../utils/errorHandler");
-const user = require("../models/UserModel");
 
 const isAuthencationUser = asyncErrorHandler(async (req, res, next) => {
     const { token } = req.cookies;
-
-    if (!token) {
+    if (token==undefined) {
         return next(new ErrorHandler("Please login to access these resources", 401));
     }
 

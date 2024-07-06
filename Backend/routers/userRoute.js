@@ -1,7 +1,6 @@
 const express=require("express");
 const router=express.Router();
 
-
 const {register, loginUser,logout,forgetPassword,resetPassword,userDetails,updatePassword,updateProfile,getAllUsers,getSingleUser,updateUserRole,removeUser} = require("../controllers/userController");
 const {isAuthencationUser,authorizeRole}=require("../middleWares/authencation")
 

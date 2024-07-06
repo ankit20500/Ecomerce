@@ -9,8 +9,9 @@ const crypto=require("crypto");
 
 
 const register=asyncErrorHandler(async(req,res,next)=>{
-    const {name,email,password}=req.body;
-    const user=await User.create({
+    try {
+        const {name,email,password}=req.body;
+        const user=await User.create({
         name,
         email,
         password,
@@ -18,40 +19,52 @@ const register=asyncErrorHandler(async(req,res,next)=>{
         public_id:"this is sample id",
         url:"asdkfuir",
     }})
-    sendTokens(user,200,res);
+    sendTokens(user,200,res); 
+    } catch (error) {
+        res.status(200).json({
+            message:error
+        })
+    }
     
 })
 
 // user login
 const loginUser=asyncErrorHandler(async(req,res,next)=>{
-    const {email,password}=req.body;
-    // checking username and password
-    if(!email || !password){
-        return next(new ErrorHandler("please enter email and password",400));
+    try {
+        const {email,password}=req.body;
+        if(!email || !password)return next(new ErrorHandler("please enter email and password",400))
+        const user=await User.findOne({email}).select("+password");
+        if(!user)return next(new ErrorHandler("user not exist please register first",401))
+        const isPasswordMatched = await user.comparePassword(password);
+        if(!isPasswordMatched)return next(new ErrorHandler("wrong password",401))
+        sendTokens(user,200,res);
+    } catch (error) {
+        res.status(200).json({
+            message:error
+        })
     }
-    const user=await User.findOne({email}).select("+password");
-    if(!user){
-        return next(new ErrorHandler("Invalid email or password",401));
-    }
-    const isPasswordMatched = await user.comparePassword(password);
-    if(!isPasswordMatched){
-        return next(new ErrorHandler("Invalid email or password",401))
-    }
-    sendTokens(user,200,res);
 })
 
 // logout
-const logout=asyncErrorHandler(async(req,res,next)=>{
-    res.cookie("token",null,{
-        expireIn:new Date(Date.now()),
-        httpOnly:true
-    })
+const logout = asyncErrorHandler(async (req, res, next) => {
+    const { token } = req.cookies;
+    if (token==undefined) {
+        return res.status(400).json({
+            success: false,
+            message: "You are already logged out",
+        });
+    }
+    res.cookie("token", "", {
+        expires: new Date(Date.now()), 
+        httpOnly: true,
+    });
 
     res.status(200).json({
-        success:true,
-        message:"logged Out",
-    })
-})
+        success: true,
+        message: "Logged Out",
+    });
+});
+
 
 
 // Forget passwork 
@@ -118,8 +131,14 @@ const userDetails=asyncErrorHandler(async(req,res,next)=>{
 
 //update password by user
 const updatePassword=asyncErrorHandler(async(req,res,next)=>{
-    const user=await User.findById(req.user.id).select("+password");
-    
+    const { token } = req.cookies;
+    if(token==undefined){
+        return res.status(400).json({
+            success: false,
+            message: "You are already logged out",
+        });
+    }
+    const user=await User.findById(req.user.id).select("+password");    
     const isPasswordMatched=await user.comparePassword(req.body.oldPassword);
     if(!isPasswordMatched){
         return next(new ErrorHandler("old password is wrong",400))
@@ -134,23 +153,32 @@ const updatePassword=asyncErrorHandler(async(req,res,next)=>{
 })
 
 // update user details
-const updateProfile = asyncErrorHandler(async (req, res, next) => { 
+const updateProfile = asyncErrorHandler(async (req, res, next) => {
     const newUserData = {
         name: req.body.name,
         email: req.body.email,
-      
+        number: req.body.number
     };
 
-    await User.findByIdAndUpdate(req.body.id, newUserData, {
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
     });
+
+    if (!updatedUser) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found",
+        });
+    }
+
     res.status(200).json({
         success: true,
+        message: "Profile updated successfully",
+        user: updatedUser,
     });
 });
-
 // get all users details(admin ko check krna ho agr ke kitne log signup kiye hai)
 const getAllUsers=asyncErrorHandler(async(req,res,next)=>{
     const users=await User.find();
@@ -202,7 +230,6 @@ const removeUser = asyncErrorHandler(async (req, res, next) => {
 
     await user.deleteOne();
 
-    
     res.status(200).json({
         success: true,
         message:"user deleted sucessfully"

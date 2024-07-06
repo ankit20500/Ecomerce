@@ -13,20 +13,18 @@ const { connection } = require("mongoose");
 //         product
 //     });
 // });
+
 const createProduct = asyncErrorHandler(async (req, res) => {
     const products = req.body; // Assuming req.body is an array of products
-console.log("request arrived ")
     // Array to store the saved products
     const savedProducts = [];
 
     // Iterate over each product in the array
     for (const productData of products) {
-        // Create a new product using the schema
         const product = await schema.create(productData);
-        
-        // Push the saved product to the array
-        savedProducts.push(product);
+        savedProducts.push(product)
     }
+    
 
     // Respond with the saved products
     res.status(200).json({
@@ -186,6 +184,24 @@ const DeleteProductReview=asyncErrorHandler(async(req,res,next)=>{
         })
     }
 })
-
-
-module.exports = { getallProduct, createProduct, updateProduct ,DeleteProduct, ProductDetail,createReview,DeleteProductReview,GetProductReviews};
+const getsearchProduct = async (req, res) => {
+    try {
+      const query = req.query.name;
+      if (!query) {
+        return res.status(400).send({ error: 'Query parameter "name" is required' });
+      }
+      const products = await schema.find({
+        $or: [
+          
+          {  category: { $regex: query, $options: 'i' } },
+          { name: { $regex: query, $options: 'i' } }
+        ]
+      });
+      console.log(products);
+      res.status(200).json(products);
+    } catch (error) {
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  };
+  
+module.exports = {getsearchProduct, getallProduct, createProduct, updateProduct ,DeleteProduct, ProductDetail,createReview,DeleteProductReview,GetProductReviews};
