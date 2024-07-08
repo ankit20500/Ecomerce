@@ -38,7 +38,7 @@ const LevelContextProvider = ({ children }) => {
       setIsAuthenticated(response.data.success);
       setLoading(false)
     } catch (error) {
-      console.error('Error fetching authentication status:', error);
+      console.error('Error is fetching in authentication process:', error);
       setLoading(false)
       if (error.response && error.response.status === 401) {
         setIsAuthenticated(false);

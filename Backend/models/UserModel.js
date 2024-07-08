@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
-const bcrypt=require("bcryptjs");
+const bcrypt=require("bcrypt")
 const jwt=require("jsonwebtoken");
 const crypto=require("crypto");
 
@@ -53,24 +53,26 @@ const UserModel=new mongoose.Schema(
     }
 )
 
+// this pre method is running just before the save any data and when the password field is changed then it
+// bcrypt our password and stored in some random strings
 UserModel.pre("save",async function(next){
-    if(!this.isModified("password")){
-        next();
-    }
+    if(!this.isModified("password")) next();
     this.password=await bcrypt.hash(this.password,10);
 })
 
+//compare password if user send any password 
+UserModel.methods.comparePassword=async function(Password){
+    return await bcrypt.compare(Password,this.password)
+}
+
+// this method is for generating the jwt token
 UserModel.methods.getJWTToken=function(){
-    const token= jwt.sign({id:this._id} , process.env.JWT_SECRET,{
-        expiresIn: process.env.JWT_EXPIRE
+    const token= jwt.sign({id:this._id} , process.env.JWT_SECRET_TOKEN,{
+        expiresIn: process.env.JWT_EXPIRE_TOKEN
     });
     return token
 };
 
-//compare password
-UserModel.methods.comparePassword=async function(enterPassword){
-    return await bcrypt.compare(enterPassword,this.password)
-}
 
 // user reset password
 UserModel.methods.getResetPasswordToken=async function(){

@@ -1,29 +1,38 @@
 const app = require("./app");
-
-const dotenv=require("dotenv");
-
-const connectDB=require("./dataBase");
+const dotenv = require("dotenv");
+const connectDB = require("./dataBase");
 dotenv.config();
 
+const PORT = process.env.PORT || 8000;
 
-const PORT=process.env.PORT;
-connectDB();
+connectDB()
+    .then(() => {
+        process.on("uncaughtException", err => {
+            console.log(`error: ${err.message}`);
+            console.log("Shutting down the server due to uncaught Exception");
+            process.exit(1);
+        });
 
-process.on("uncaughtException", err=>{
+        app.listen(PORT, () => {
+            console.log(`server is starting on https://localhost:${PORT}`);
+        });
+    })
+    .catch(error => {
+        console.log("Mongodb connection failed ", error);
+    });
+
+process.on("unhandledRejection", err => {
     console.log(`error: ${err.message}`);
-    console.log("Shut downing the server due to uncaught Exception");
-        process.exit(1);
-})
+    console.log("Shutting down the server due to some unhandled Rejection");
+    process.exit(1);
+});
 
 
-app.listen(PORT, ()=>{
+
+
+// app.listen(PORT, ()=>{
    
-    console.log(`server is starting on http://localhost:${PORT}`);
-})
+//     console.log(`server is starting on http://localhost:${PORT}`);
+// })
 
-process.on("unhandledRejection",err=>{
-    console.log(`error: ${err.message}`);
-    console.log("Shut downing the server due to some unhandle Rejection");
-        process.exit(1);
-})
 

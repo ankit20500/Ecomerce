@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Country, State, City } from 'country-state-city';
 import Person2Icon from '@mui/icons-material/Person2';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -9,6 +9,9 @@ import FoundationIcon from '@mui/icons-material/Foundation';
 import PinIcon from '@mui/icons-material/Pin';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useNavigate} from 'react-router-dom'
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function SetAddress() {
   const navigate=useNavigate()
@@ -21,6 +24,25 @@ function SetAddress() {
   const [number, setNumber]=useState('')
   const [address, setAddress]=useState('')
   const [pinCode, setPinCode]=useState('')
+
+  const tostfn = {
+    position: "bottom-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark"
+};
+
+  useEffect(()=>{
+    const getLocalStorageCartData=localStorage.getItem("Cart_Items");
+    if(!getLocalStorageCartData){
+      toast.error("please Select the Items in the cart first",tostfn)
+      navigate("/cart")
+    }
+  },[])
 
   const handleCountryChange=(e)=>{
     const selectedCountry=e.target.value;
@@ -57,8 +79,18 @@ function SetAddress() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const obj={name,address,number,country,selectedState,selectedCity,pinCode};
-    localStorage.setItem("address",JSON.stringify(obj))
-    navigate("/shipping-details")
+    if(name!='' && address!='' && number!='' && country!='' && selectedState!='' && selectedCity!='' && pinCode!=''){
+      localStorage.setItem("address",JSON.stringify(obj))
+      navigate("/shipping-details")
+    }else{
+      if(name=='')toast.error("Please enter your name",tostfn)
+      else if(number=='')toast.error("Please enter your number",tostfn)
+      else if(address=='')toast.error("Please enter your address",tostfn)
+      else if(country=='')toast.error("Please select your country",tostfn)
+      else if(selectedState=='')toast.error("Please select your state",tostfn)
+      else if(selectedCity=='')toast.error("Please select your city",tostfn)
+      else if(pinCode=='')toast.error("Please enter your pincode",tostfn)
+    }
   };
 
   return (

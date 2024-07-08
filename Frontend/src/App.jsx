@@ -15,6 +15,8 @@ import Cart_Item from '../components/Cart_Item/Cart_Item.jsx';
 import SetAddress from '../components/Delivary_Address/SetAddress.jsx';
 import UserOption from '../components/Speed_Dials/UserOption.jsx';
 import Shipping_details from '../components/Shipping_details/Shipping_details.jsx';
+import PaymentForm from '../components/Payment_option/PaymentForm.jsx';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -35,7 +37,9 @@ function App() {
           <Route path='/edit-password' element={<EditPassword/>}/>
           <Route path='/set-delivary-address' element={<SetAddress/>}/>
           <Route path='/shipping-details' element={<Shipping_details/>}/>
+          <Route path='/payment-option' element={<PaymentForm/>}/>
         </Routes>
+        <ToastContainer />
         <Footer/>
     </Router>
   );

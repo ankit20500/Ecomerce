@@ -69,7 +69,7 @@ const AuthForm = () => {
           alert.success("Sign Up successful");
         }
       } catch (error) {
-        alert.error("Something went wrong");
+        alert.error(error.response.data.message);
       }
     }
   };
@@ -91,7 +91,7 @@ const AuthForm = () => {
         return response.data;
       } else {
         console.log(response)
-        alert.error("Login Failed");
+        alert.error(error.response.data.message);
       }
     } catch (error) {
       alert.error(error.response.data.message);

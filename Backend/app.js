@@ -11,7 +11,13 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions))
-app.use(express.json());
+app.use(express.json({limit:"20kb"}));
+// app.use(express.urlencoded()) // in this line it gets easily accepted the date from url
+                              // also like from any other url's website
+                              // it is commenting bcz in the running time it shows me
+                              // that body-parser deprecated like that
+
+app.use(express.static("Public"))  // it allow the static file (like public file)                              
 app.use(cookieParser());
 
 const productRoute=require("./routers/productRoute");

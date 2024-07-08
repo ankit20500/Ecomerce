@@ -197,7 +197,6 @@ const getsearchProduct = async (req, res) => {
           { name: { $regex: query, $options: 'i' } }
         ]
       });
-      console.log(products);
       res.status(200).json(products);
     } catch (error) {
       res.status(500).send({ error: 'Internal Server Error' });
