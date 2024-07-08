@@ -76,7 +76,8 @@ function Shipping_details() {
     }, []);
 
     const HandleSubmitPayment=()=>{
-        const price=formatPrice(totalCost);
+        const formattedPrice=formatPrice(totalCost);
+        const price = Number(formattedPrice.replace(/,/g, ''))
         const totalPrice=50+0.18*price+price;
         const taxPrice=0.18*price;
         const obj={
