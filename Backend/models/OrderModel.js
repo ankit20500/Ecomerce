@@ -23,7 +23,7 @@ const orderSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    pincode:{
+    pinCode:{
         type:Number, 
         required:true
     },
@@ -63,7 +63,7 @@ const orderSchema=new mongoose.Schema({
     required:true
    },
    paymentInfo:{
-    id:{
+    cardNumber:{
         type:String,
         required:true
     },

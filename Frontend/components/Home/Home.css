@@ -41,7 +41,7 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 .banner a button:hover{
-    background-color: #635dc0;
+    background-color: #2aa3c2;
     color: white;
 }
 .banner::after{

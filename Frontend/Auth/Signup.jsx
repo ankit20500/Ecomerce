@@ -59,7 +59,7 @@ const AuthForm = () => {
         confirmpassword: isconfirmPassword
       };
       try {
-        const response = await axios.post("http://localhost:4000/api/v1/register", obj);
+        const response = await axios.post("http://localhost:4000/api/v1/register", obj,{withCredentials:true});
         if (response) {
           setIsName("");
           setIsEmail("");

@@ -193,7 +193,7 @@ function Cart_Item() {
                   <span>Gross Total</span>
                   <span>RS {totalAmount + 50}</span>
                 </div>
-                <button onClick={GoToAddressPage} className="bg-red-500 font-semibold hover:bg-red-600 py-3 text-sm text-white uppercase w-full">
+                <button onClick={GoToAddressPage} className="bg-[rgb(78,166,133)] font-semibold hover:bg-[rgb(71,190,147)] py-3 text-sm text-white uppercase w-full">
                   Checkout
                 </button>
               </div>

@@ -1,6 +1,7 @@
 const express=require("express");
 const router=express.Router();
 
+const upload=require("../middleWares/multer");
 const {register, loginUser,logout,forgetPassword,resetPassword,userDetails,updatePassword,updateProfile,getAllUsers,getSingleUser,updateUserRole,removeUser} = require("../controllers/userController");
 const {isAuthencationUser,authorizeRole}=require("../middleWares/authencation")
 
@@ -16,7 +17,7 @@ router.post("/logout",logout);
 router.get("/profile",isAuthencationUser,userDetails)
 router.put("/password/update",isAuthencationUser,updatePassword)
 
-router.put("/profile/update",isAuthencationUser,updateProfile)
+router.put("/profile/update", isAuthencationUser, upload.fields([{ name: "avatar" }]), updateProfile);
 
 router.get("/admin/users",isAuthencationUser, authorizeRole("admin"), getAllUsers);
 router.get("/admin/user/:id",isAuthencationUser,authorizeRole("admin"),getSingleUser);

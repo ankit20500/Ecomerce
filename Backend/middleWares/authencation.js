@@ -14,7 +14,7 @@ const isAuthencationUser = asyncErrorHandler(async (req, res, next) => {
         const decodedData = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
         const user = await User.findById(decodedData.id);
         if (!user) {
-            return next(new ErrorHandler("User not found", 404));
+            return next(new ErrorHandler("Invalid access token", 404));
         }
         req.user = user;
         next();

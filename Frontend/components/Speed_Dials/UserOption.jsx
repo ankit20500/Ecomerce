@@ -21,7 +21,7 @@ const actions = [
 export default function UserOption() {
   const alert=useAlert()
   const navigate = useNavigate();
-  const { isAuthenticated,fetchUserData } = useAppContext();
+  const { isAuthenticated,fetchUserData,user } = useAppContext();
   const [open, setOpen] = useState(false);
 
   const handleClose = () => setOpen(false);
@@ -65,7 +65,7 @@ export default function UserOption() {
           icon={
             <div className="w-14 h-14 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src='https://imagetolink.com/ib/zLlUPaP2C6.png'
+                src={user? user.avatar.url :"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"}
                 className="w-full h-full object-cover"
                 alt="User Icon"
               />

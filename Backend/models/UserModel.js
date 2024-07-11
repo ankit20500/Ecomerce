@@ -70,7 +70,7 @@ UserModel.methods.getJWTToken=function(){
     const token= jwt.sign({id:this._id} , process.env.JWT_SECRET_TOKEN,{
         expiresIn: process.env.JWT_EXPIRE_TOKEN
     });
-    return token
+    return token;
 };
 
 

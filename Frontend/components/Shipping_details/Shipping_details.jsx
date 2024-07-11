@@ -27,6 +27,7 @@ function Shipping_details() {
     };
 
     useEffect(() => {
+        localStorage.removeItem("Pricing");
         const fetchCartData = async () => {
             const cart_items_str = localStorage.getItem("Cart_Items");
             const cart_items = JSON.parse(cart_items_str);
@@ -64,16 +65,6 @@ function Shipping_details() {
     useEffect(()=>{
         CalculateTotal();
     },[cart])
-
-    useEffect(() => {
-        const handleUnload = () => {
-            localStorage.removeItem('address');
-        };
-        window.addEventListener('beforeunload', handleUnload);
-        return () => {
-            window.removeEventListener('beforeunload', handleUnload);
-        };
-    }, []);
 
     const HandleSubmitPayment=()=>{
         const formattedPrice=formatPrice(totalCost);
@@ -120,15 +111,15 @@ function Shipping_details() {
                                     </div>
                                     <div className='flex flex-row'>
                                         <p>Phone no :</p>
-                                        <p className='ml-3'>{orderAddress.number}</p>
+                                        <p className='ml-3'>{orderAddress.phoneNo}</p>
                                     </div>
                                     <div className='flex flex-row'>
                                         <p>City :</p>
-                                        <p className='ml-14'>{orderAddress.selectedCity}</p>
+                                        <p className='ml-14'>{orderAddress.city}</p>
                                     </div>
                                     <div className='flex flex-row'>
                                         <p>State :</p>
-                                        <p className='ml-11'>{orderAddress.selectedState}</p>
+                                        <p className='ml-11'>{orderAddress.state}</p>
                                     </div>
                                     <div className='flex flex-row'>
                                         <p>PinCode :</p>

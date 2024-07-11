@@ -4,19 +4,19 @@ const orderModel = require("../models/OrderModel");
 
 // create new order
 const createOrder=asyncErrorHandler(async(req,res,next)=>{
-    const {shippingInfo,orderItems,paymentInfo,itemPrice,taxPrice,shippingPrice}=req.body;
-
-    const order=await userModel.create({
+    const {shippingInfo,orderItems,paymentInfo,itemPrice,taxPrice,totalPrice,shippingPrice}=req.body;
+    console.log(shippingInfo)
+    const order=await orderModel.create({
         shippingInfo,
         orderItems,
         paymentInfo,
         itemPrice,
         taxPrice,
         shippingPrice,
+        totalPrice,
         user:req.user._id,
         paidAt:Date.now()
     })
-
     res.status(200).json({
         success:true,
         order

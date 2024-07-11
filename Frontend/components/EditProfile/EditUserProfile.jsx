@@ -8,26 +8,35 @@ import axios from 'axios';
 const EditUserProfile = () => {
     const navigate = useNavigate();
     const alert = useAlert();
-    const { user, isAuthenticated,fetchUserData } = useAppContext();
+    const { user, isAuthenticated, fetchUserData } = useAppContext();
     const [isName, setIsName] = useState("");
     const [isEmail, setIsEmail] = useState("");
-    const [number, setNumber]=useState(null)
+    const [number, setNumber] = useState("");
+    const [avatar, setAvatar] = useState(null);
+    const [previewAvatar, setPreviewAvatar] = useState(null);
+    const [loading, setLoading] = useState(false);
+
     const fetchData = async () => {
-        const obj = {
-            name: isName,
-            email: isEmail,
-            number:number
-        };
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('name', isName);
+        formData.append('email', isEmail);
+        formData.append('number', number);
+        if (avatar) {
+            formData.append('avatar', avatar);
+        }
         try {
-            await axios.put("http://localhost:4000/api/v1/profile/update", obj,{
-              withCredentials: true
+            await axios.put("http://localhost:4000/api/v1/profile/update", formData, {
+                withCredentials: true,
             });
-            fetchUserData()
+            setLoading(false);
+            fetchUserData();
             navigate("/profile");
             alert.success("Profile updated successfully");
-        } catch (error){
+        } catch (error) {
+            setLoading(false);
             console.log("An error occurred", error);
-            alert.error(error.response.data.message)
+            alert.error(error.response.data.message);
         }
     };
 
@@ -36,17 +45,27 @@ const EditUserProfile = () => {
             navigate("/register");
         }
     }, [navigate, isAuthenticated]);
+
     useEffect(() => {
         if (user) {
-            setIsName(user.name);
-            setIsEmail(user.email);
-            setNumber(user.number);
+            setIsName(user.name || "");
+            setIsEmail(user.email || "");
+            setNumber(user.number || "");
+            setAvatar(user.avatar.url || "");
         }
     }, [user]);
-    if (!user) {
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        if (previewAvatar) URL.revokeObjectURL(previewAvatar);
+        setAvatar(file);
+        setPreviewAvatar(URL.createObjectURL(file));
+    };
+
+    if (!user || loading) {
         return <Loading />;
     }
-    
+
     return (
         <div className="bg-white w-full flex flex-row gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
             <main className="w-full min-h-screen py-1">
@@ -57,22 +76,21 @@ const EditUserProfile = () => {
                             <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                                 <img
                                     className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-                                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+                                    src={previewAvatar || avatar || "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"}
                                     alt="Bordered avatar"
                                 />
                                 <div className="flex flex-col space-y-5 sm:ml-8">
-                                    <button
-                                        type="button"
-                                        className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
-                                    >
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleAvatarChange}
+                                        className="hidden"
+                                        id="avatarUpload"
+                                        placeholder='change picture'
+                                    />
+                                    <label htmlFor="avatarUpload" className="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-red-500 rounded-lg border border-indigo-200 hover:bg-red-600 focus:z-10 focus:ring-4 focus:ring-indigo-200 cursor-pointer">
                                         Change picture
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200"
-                                    >
-                                        Delete picture
-                                    </button>
+                                    </label>
                                 </div>
                             </div>
                             <div className="items-center mt-8 sm:mt-14 text-[#202142]">
@@ -80,7 +98,7 @@ const EditUserProfile = () => {
                                     <div className="w-full">
                                         <label
                                             htmlFor="first_name"
-                                            className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                                            className="block mb2 text-sm font-medium text-indigo-900 dark:text-white"
                                         >
                                             Your Full Name
                                         </label>
@@ -124,7 +142,7 @@ const EditUserProfile = () => {
                                         className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                         placeholder="your profession"
                                         value={number}
-                                        onChange={(e)=>setNumber(e.target.value)}
+                                        onChange={(e) => setNumber(e.target.value)}
                                         required
                                     />
                                 </div>

@@ -7,7 +7,7 @@ import LocationCityIcon from '@mui/icons-material/LocationCity';
 import PublicIcon from '@mui/icons-material/Public';
 import FoundationIcon from '@mui/icons-material/Foundation';
 import PinIcon from '@mui/icons-material/Pin';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+// import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useNavigate} from 'react-router-dom'
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,12 +16,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function SetAddress() {
   const navigate=useNavigate()
   const [country, setCountry]=useState('')
-  const [selectedState,setSelectedState]=useState('')
-  const [state,setState]=useState([])
-  const [selectedCity, setSelectedCity]=useState('')
-  const [city, setCity]=useState([])
+  const [state,setState]=useState('')
+  const [AllStates,setAllStates]=useState([])
+  const [city, setCity]=useState('')
+  const [AllCities, setAllCities]=useState([])
   const [name, setName]=useState('')
-  const [number, setNumber]=useState('')
+  const [phoneNo, setPhoneNo]=useState('')
   const [address, setAddress]=useState('')
   const [pinCode, setPinCode]=useState('')
 
@@ -37,6 +37,8 @@ function SetAddress() {
 };
 
   useEffect(()=>{
+    localStorage.removeItem("address")
+    localStorage.removeItem("Pricing")
     const getLocalStorageCartData=localStorage.getItem("Cart_Items");
     if(!getLocalStorageCartData){
       toast.error("please Select the Items in the cart first",tostfn)
@@ -50,45 +52,46 @@ function SetAddress() {
     const countryname=Country.getAllCountries().find(country=>country.name===selectedCountry)
     if(countryname){
     const stateOfCountry=State.getStatesOfCountry(countryname.isoCode);
-    setState(stateOfCountry)
-    setCity([])
-    setSelectedCity('')
-    setSelectedState('')
+    setAllStates(stateOfCountry)
+    setAllCities([])
+    setCity('')
+    setState('')
     }else{
-      setState([])
-      setCity([])
-      setSelectedState('')
-      setSelectedCity('')
+      setAllStates([])
+      setAllCities([])
+      setState('')
+      setCity('')
     }
   }
 
   const handleStateChange=(e)=>{
     const selectState=e.target.value;
-    setSelectedState(selectState)
-    const stateName=state.find(state=>state.name === selectState)
+    setState(selectState)
+    const stateName=AllStates.find(state=>state.name === selectState)
     if(stateName){
       const distOfState=City.getCitiesOfState(stateName.countryCode , stateName.isoCode);
-      setCity(distOfState);
-      setSelectedCity('')
+      setAllCities(distOfState);
+      setCity('')
     }else{
-      setCity([])
-      setSelectedCity('')
+      setAllCities([])
+      setCity('')
     }
   }
 
+  
   const handleSubmit = (event) => {
     event.preventDefault();
-    const obj={name,address,number,country,selectedState,selectedCity,pinCode};
-    if(name!='' && address!='' && number!='' && country!='' && selectedState!='' && selectedCity!='' && pinCode!=''){
+    const obj={name,address,phoneNo,country,state,city,pinCode};
+    if(name!='' && address!='' && phoneNo!='' && country!='' && state!='' && city!='' && pinCode!=''){
       localStorage.setItem("address",JSON.stringify(obj))
       navigate("/shipping-details")
     }else{
       if(name=='')toast.error("Please enter your name",tostfn)
-      else if(number=='')toast.error("Please enter your number",tostfn)
+      else if(phoneNo=='')toast.error("Please enter your number",tostfn)
       else if(address=='')toast.error("Please enter your address",tostfn)
       else if(country=='')toast.error("Please select your country",tostfn)
-      else if(selectedState=='')toast.error("Please select your state",tostfn)
-      else if(selectedCity=='')toast.error("Please select your city",tostfn)
+      else if(state=='')toast.error("Please select your state",tostfn)
+      else if(city=='')toast.error("Please select your city",tostfn)
       else if(pinCode=='')toast.error("Please enter your pincode",tostfn)
     }
   };
@@ -122,8 +125,8 @@ function SetAddress() {
                   type="number"
                   name="phone"
                   placeholder="Enter phone number"
-                  value={number}
-                  onChange={(e)=>setNumber(e.target.value)}
+                  value={phoneNo}
+                  onChange={(e)=>setPhoneNo(e.target.value)}
                   className="border border-gray-900 text-center w-full h-[2rem] font-[cursive]"
                 />
               </div>
@@ -146,11 +149,11 @@ function SetAddress() {
                   type="text"
                   name="city"
                   placeholder="City"
-                  value={selectedCity}
-                  onChange={(e)=>setSelectedCity(e.target.value)}
+                  value={city}
+                  onChange={(e)=>setCity(e.target.value)}
                   className="border border-gray-900 text-center w-full h-[2rem] font-[cursive]">
                     <option value="">Select City</option>
-                    {city.map(city=>(
+                    {AllCities.map(city=>(
                       <option key={city.isoCode} value={city.name}>{city.name}</option>
                     ))}
                   </select>
@@ -176,11 +179,11 @@ function SetAddress() {
                 <FoundationIcon style={{ width: '2rem', height: '2rem', marginRight: '0.5rem' }} />
                 <select
                   name="state"
-                  value={selectedState}
+                  value={state}
                   onChange={handleStateChange}
                   className="border border-gray-900 text-center w-full h-[2rem] font-[cursive]">
                   <option value="">Select State</option>
-                  {state.map((state)=>(
+                  {AllStates.map((state)=>(
                     <option key={state.isoCode} value={state.name}>
                       {state.name}
                     </option>

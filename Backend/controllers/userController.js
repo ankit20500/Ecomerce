@@ -3,9 +3,9 @@ const ErrorHandler = require("../utils/errorHandler")
 const asyncErrorHandler=require("../utils/AsyncErrorHandler");
 const sendTokens=require("../middleWares/sendTokens")
 const sendEmail=require("../utils/sendEmail")
-const jwt=require("jsonwebtoken");
-const nodeMailer=require("nodemailer")
 const crypto=require("crypto");
+const fs=require("fs")
+const uploadOnCloudinary=require("../utils/Cloudinary")
 
 
 const register=asyncErrorHandler(async(req,res,next)=>{
@@ -17,7 +17,7 @@ const register=asyncErrorHandler(async(req,res,next)=>{
         password,
         avatar:{
         public_id:"this is sample id",
-        url:"asdkfuir",
+        url:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
     }})
     sendTokens(user,200,res); 
     } catch (error) {
@@ -33,7 +33,7 @@ const loginUser=asyncErrorHandler(async(req,res,next)=>{
     try {
         const {email,password}=req.body;
         if(!email || !password)return next(new ErrorHandler("please enter email and password",400))
-        const user=await User.findOne({email}).select("+password");
+        const user=await User.findOne({email}).select("+password")
         if(!user)return next(new ErrorHandler("user not exist please register first",401))
         const isPasswordMatched = await user.comparePassword(password);
         if(!isPasswordMatched)return next(new ErrorHandler("wrong password",401))
@@ -57,6 +57,7 @@ const logout = asyncErrorHandler(async (req, res, next) => {
     res.cookie("token", "", {
         expires: new Date(Date.now()), 
         httpOnly: true,
+        secure:true
     });
 
     res.status(200).json({
@@ -160,6 +161,29 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
         number: req.body.number
     };
 
+    let avatarImageLocalpath;
+    if (req.files && req.files.avatar && req.files.avatar.length > 0) {
+        avatarImageLocalpath = req.files.avatar[0].path;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        
+        let existavatar = user.avatar ? user.avatar.public_id : null;
+
+        const avatar = await uploadOnCloudinary(avatarImageLocalpath, req.user.id,existavatar);
+        if (avatar) {
+            newUserData.avatar = avatar;
+        } else {
+            console.log('Failed to upload new avatar.');
+        }
+    } else {
+        console.log('No avatar file found in request.');
+    }
+
     const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
@@ -172,13 +196,14 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
             message: "User not found",
         });
     }
-
     res.status(200).json({
         success: true,
         message: "Profile updated successfully",
         user: updatedUser,
     });
 });
+
+
 // get all users details(admin ko check krna ho agr ke kitne log signup kiye hai)
 const getAllUsers=asyncErrorHandler(async(req,res,next)=>{
     const users=await User.find();

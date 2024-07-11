@@ -73,12 +73,12 @@ const EditPassword = () => {
                             name="password"
                             value={confirmPassword}
                             onChange={(e)=>setConfirmPassword(e.target.value)}
-                            placeholder="Set New Password"
+                            placeholder="confirm Password"
                             className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#f84525]"
                         />
                     </div>
                     <div className="flex items-center justify-center mt-4">
-                        <button onClick={handleSubmit} type="button" className="ms-4 inline-flex items-center px-4 py-2 bg-[#f84525] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-800 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <button onClick={handleSubmit} type="button" className="ms-4 inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-600 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Set New Password
                         </button>
                     </div>
