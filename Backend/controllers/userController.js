@@ -132,24 +132,18 @@ const userDetails=asyncErrorHandler(async(req,res,next)=>{
 
 //update password by user
 const updatePassword=asyncErrorHandler(async(req,res,next)=>{
-    const { token } = req.cookies;
-    if(token==undefined){
-        return res.status(400).json({
-            success: false,
-            message: "You are already logged out",
-        });
-    }
+    const {oldPassword,newPassword,confirmPassword}=req.body;
     const user=await User.findById(req.user.id).select("+password");    
-    const isPasswordMatched=await user.comparePassword(req.body.oldPassword);
+    const isPasswordMatched=await user.comparePassword(oldPassword);
     if(!isPasswordMatched){
         return next(new ErrorHandler("old password is wrong",400))
     }
-    if(req.body.newPassword !==req.body.confirmPassword){
+    if(newPassword !==confirmPassword){
         return next(new ErrorHandler("both the password are different",400))
     }
 
     user.password=req.body.newPassword;
-    await user.save();
+    await user.save({validateBeforeSave:false});
     sendTokens(user,200,res);
 })
 
@@ -161,41 +155,24 @@ const updateProfile = asyncErrorHandler(async (req, res, next) => {
         number: req.body.number
     };
 
-    let avatarImageLocalpath;
-    if (req.files && req.files.avatar && req.files.avatar.length > 0) {
-        avatarImageLocalpath = req.files.avatar[0].path;
+    let avatarImageLocalpath=req.file?.path;
+    if(avatarImageLocalpath){
         const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-            });
-        }
-        
         let existavatar = user.avatar ? user.avatar.public_id : null;
 
         const avatar = await uploadOnCloudinary(avatarImageLocalpath, req.user.id,existavatar);
-        if (avatar) {
-            newUserData.avatar = avatar;
-        } else {
-            console.log('Failed to upload new avatar.');
+        if (!avatar) {
+            return next(new ErrorHandler("avatar is not uploaded successfully",500))
         }
-    } else {
-        console.log('No avatar file found in request.');
+        newUserData.avatar=avatar
     }
-
+    
     const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
     });
 
-    if (!updatedUser) {
-        return res.status(404).json({
-            success: false,
-            message: "User not found",
-        });
-    }
     res.status(200).json({
         success: true,
         message: "Profile updated successfully",

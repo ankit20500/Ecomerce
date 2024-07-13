@@ -17,7 +17,7 @@ router.post("/logout",logout);
 router.get("/profile",isAuthencationUser,userDetails)
 router.put("/password/update",isAuthencationUser,updatePassword)
 
-router.put("/profile/update", isAuthencationUser, upload.fields([{ name: "avatar" }]), updateProfile);
+router.put("/profile/update", isAuthencationUser, upload.single('avatar'), updateProfile);
 
 router.get("/admin/users",isAuthencationUser, authorizeRole("admin"), getAllUsers);
 router.get("/admin/user/:id",isAuthencationUser,authorizeRole("admin"),getSingleUser);
